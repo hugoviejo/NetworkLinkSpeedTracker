@@ -21,9 +21,9 @@ class NetworkChecker(config: NetworkLinkSpeedConfig) extends Runnable {
 
   def checkNetworkLinkSpeed(interface: String): String = {
     try {
-      val interfaceData = s"ifconfig $interface".!!
-      val media = interfaceData.split("\\n").filter(_.contains("media")).head
-      media.substring(media.indexOf("(") + 1, media.indexOf("baseT"))
+      val interfaceData = s"${Constants.IfconfigBinary} $interface".!!
+      val media = interfaceData.split("\\n").filter(_.contains(Constants.MediaData)).head
+      media.substring(media.indexOf("(") + 1, media.indexOf(Constants.BaseTData))
     } catch {
       case _: Exception => {
         Constants.SpeedNoConnection

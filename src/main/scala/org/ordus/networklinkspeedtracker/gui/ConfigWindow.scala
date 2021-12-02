@@ -4,7 +4,9 @@ import org.ordus.networklinkspeedtracker.model.NetworkLinkSpeedConfig
 
 import java.awt.event.{ActionEvent, ActionListener}
 import java.awt.{BorderLayout, FlowLayout, GridLayout, Toolkit}
+import java.net.NetworkInterface
 import javax.swing._
+import scala.jdk.CollectionConverters._
 
 class ConfigWindow extends JDialog {
   setModal(true)
@@ -58,6 +60,11 @@ class ConfigWindow extends JDialog {
       requestFocus()
       None
     } else {
+      val networkInterfaces = NetworkInterface.getNetworkInterfaces.asScala.filter(!_.isLoopback).filter(!_.isPointToPoint)
+      val tooltip = s"<html>Available interfaces: <p><p>${networkInterfaces.map(_.getName).mkString("<p>")}</html>"
+      interfaceLabel.setToolTipText(tooltip)
+      interfaceText.setToolTipText(tooltip)
+
       configNetwork = config
       intervalText.setText(config.interval.toString)
       interfaceText.setText(config.interface)

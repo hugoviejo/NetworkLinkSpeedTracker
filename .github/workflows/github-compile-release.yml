@@ -1,0 +1,29 @@
+name: Compile and upload to the release section of GitHub
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - v*
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      APP_NAME: NetworkLinkSpeedTracker
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up JDK 8
+        uses: actions/setup-java@v2
+        with:
+          java-version: '8'
+          distribution: 'adopt'
+      - name: Compile
+        run: sbt pack
+      - name: Package
+        run: mkdir $APP_NAME && cp -r target/pack/* $APP_NAME && tar zcvf $APP_NAME.tar.gz $APP_NAME
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files:
+            NetworkLinkSpeedTracker.tar.gz

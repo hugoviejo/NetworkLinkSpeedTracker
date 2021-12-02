@@ -54,6 +54,7 @@ object GuiManager extends IconManager {
       } catch {
         case e: AWTException =>
           System.err.println("TrayIcon could not be added.")
+          e.printStackTrace()
           System.exit(1)
           false
       }
